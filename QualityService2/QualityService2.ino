@@ -2,21 +2,12 @@
 #include <EEPROM.h>
 
 extern volatile unsigned long timerexpire;
-extern volatile unsigned int Values;
 
 String options = " ";
 
-//void Interruption(const int num) { //base function. Would have like to use it as a base.
-//  if (timerexpire <= millis()) {
-//    timerexpire = millis() + 2500;
-//    digitalWrite(ledPins[num - 1], HIGH);
-//  }
-//  Serial.println("Interruption " + String(num));
-//}
-
 void setup() {
   // initialize the LED pin as an output:
-  readMemory();
+  
   for (int i = 0; i < numButtons; i++) {
     pinMode(ledPins[i], OUTPUT);
     pinMode(buttonPins[i], INPUT);
@@ -29,7 +20,7 @@ void setup() {
     ; // wait for serial port to connect. Needed for Native USB only
   }
   Serial.println(Welcome);
-  Serial.println( printmem(Values));
+  readMemory();
 }
 
 void loop() {
@@ -46,5 +37,6 @@ void loop() {
     }
   }
   delay(TimeON/2);
+  
   //Serial.println("Still alive");
 }

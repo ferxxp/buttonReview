@@ -24,5 +24,5 @@ int readInputs();
 bool readMemory();
 bool writeMemory();
 bool wipeMemory();
-String printmem(const int values[]);
-void UserRequest(String options);
+void printmem(const int values[]);
+void UserRequest(String op);

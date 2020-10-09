@@ -9,15 +9,14 @@ volatile unsigned int Values [] =  {0, 0, 0, 0, 0};
 void Interruption() {
   const int num = readInputs();
   if (num > 0 && num <= numButtons) {
-    Serial.println(buttomPressed + String(num));
+    Serial.print(buttomPressed);
+    Serial.println(String(num));
     if (timerexpire <= millis()) {
       Values[num - 1]++;
       writeMemory();
       timerexpire = millis() + TimeON;
       digitalWrite(ledPins[num - 1], HIGH);
-      String msg=printmem(Values);
-      Serial.println(Readstate);
-      Serial.println(msg);
+      printmem(Values);
     } else
       Serial.println(wait);
   }
@@ -31,6 +30,7 @@ int readInputs() {
 }
 bool readMemory() {
   EEPROM.get(0, Values);
+  printmem(Values);
   return true;
 }
 bool writeMemory() {
@@ -44,29 +44,32 @@ bool wipeMemory() {
   EEPROM.put(0, Values);
   return true;
 }
-String printmem(const int values[]) {
-  String response = "";
+void printmem(const int values[]) {
+  Serial.println(Readstate);
   for (int i = 0; i < numButtons; i++) {
-    response = (response + NameButtons[i] + ": " + Values[i] + ", ");
+    Serial.print(String(NameButtons[i]));
+    Serial.print(": ");
+    Serial.print(String(values[i]));
+    Serial.print(", ");
   }
-  return response;
+  Serial.println("");
 }
-void UserRequest(String options){
-  if (options.equalsIgnoreCase(Option1)) {
-      Serial.println(Readstate);
-      Serial.println( printmem(Values));
+void UserRequest(String op){
+  if (op.equalsIgnoreCase(Option1)) {
+      readMemory();
     }
-    else if (options.equalsIgnoreCase(Option2)) {
+    else if (op.equalsIgnoreCase(Option2)) {
       wipeMemory();
       Serial.println(Reset);
-    }else if (options.equalsIgnoreCase(Option3)) {
+    }else if (op.equalsIgnoreCase(Option3)) {
       for (int i = 0; i < numButtons; i++) {
         digitalWrite(ledPins[i], HIGH);
       }
       timerexpire = millis() + TimeON;
       Serial.println(Onlights);
     }else{
-      Serial.println(options+errorRqst);
+      Serial.println(op);
+      Serial.println(Welcome);
       }
   }
 #endif
